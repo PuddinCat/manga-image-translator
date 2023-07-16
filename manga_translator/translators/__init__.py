@@ -33,6 +33,7 @@ TRANSLATORS = {
     'papago': PapagoTranslator,
     'gpt3': GPT3Translator,
     'gpt3.5': GPT35TurboTranslator,
+    'gpt3.5-evil': GPT35TurboTranslator,
     'gpt4': GPT4Translator,
     'none': NoneTranslator,
     'original': OriginalTranslator,
