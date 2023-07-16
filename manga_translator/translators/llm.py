@@ -12,6 +12,7 @@ from typing import (
     Iterable,
     Callable,
     TypeVar,
+    Union,
 )
 import random
 from copy import deepcopy
@@ -44,7 +45,7 @@ class EvilNextWebState(TypedDict):
     counts: Dict[str, int]
 
 
-State = EvilAPIState | EvilNextWebState
+State = Union[EvilAPIState, EvilNextWebState]
 NewStateFunction = Callable[[], State]
 AnswerFunction = Callable[
     [Messages, Config, State], Tuple[str, Messages, State]
