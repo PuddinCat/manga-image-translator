@@ -49,6 +49,8 @@ VALID_TRANSLATORS = [
     'deepl',
     'papago',
     'gpt3.5',
+    'gpt3.5-evil',  # web server 会在这里检测所有可用的翻译器
+    # 。。。。。。
     'none',
     'original',
     'nllb',
