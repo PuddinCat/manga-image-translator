@@ -38,3 +38,4 @@ python-dotenv
 nest-asyncio
 marshmallow
 cython
+tiktoken
