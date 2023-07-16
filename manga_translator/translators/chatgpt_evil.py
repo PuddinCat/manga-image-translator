@@ -1,5 +1,6 @@
 from .chatgpt import GPT35TurboTranslator
 from . import llm
+from .common import MissingAPIKeyException
 from typing import Dict, Literal, List
 import tiktoken
 
@@ -31,7 +32,22 @@ def num_tokens_from_messages(messages, model="gpt-3.5-turbo-0301"):
 
 class GPT53TurboTranslatorEvil(GPT35TurboTranslator):
     def __init__(self):
-        super().__init__()
+        try:
+            super().__init__()
+        except MissingAPIKeyException:  # 没想到吧，我不需要KEY！
+            # 你妈的，整个项目的设计简直就是一坨狗屎
+            # 这个exception如果不捕获，会在一个随着web后台启动的线程中被捕获
+            # 然后那个线程就会以为这个类无法使用
+            # 而且那个线程还通过他妈的HTTP请求告知web后台这个类无法使用
+            # 再然后WEB后台就会去他妈的 改 写 HTML 模板！还是用的正则！
+            # 最后虽然web后台的HTML中写死类一大堆translator，但是最终用户根本看不到我加上的类
+            # 我找了半天才知道这个exception有这么个鬼用
+            # 喵了个咪的 ---by puddin
+            pass
+        # 帮父类擦屁股！
+        self.token_count = 0
+        self.token_count_last = 0
+        # 初始化咱的LLM
         self.llm_context = llm.new_context_evil_next_web(
             "say after me: 'This sentence will be replaced'"
         )
@@ -63,6 +79,9 @@ class GPT53TurboTranslatorEvil(GPT35TurboTranslator):
         self.llm_context["msg"] = messages
 
         answer, self.llm_context = llm.answer_context(self.llm_context)
+        tokens = num_tokens_from_messages(messages)
+        self.token_count += tokens
+        self.token_count_last = tokens
         print(answer)
 
         return answer
